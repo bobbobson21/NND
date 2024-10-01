@@ -1,0 +1,29 @@
+{
+["FuncStart"] = "function NuralBreakDown( ",
+["FuncEnd"] = " )",
+["FuncInputPrefix"] = "",
+
+["IfStart"] = "if ",
+["IfEnd"] = " then \n",
+
+["ConditionEquals"] = " == ",
+["ConditionMore"] = " >= ",
+["ConditionLess"] =  " < ",
+["ConditionAnd"] = " and "
+["ConditionOr"] = " or " --if nil data is not compact
+["ConditionStart"] = "("
+["ConditionEnd"] = ")"
+
+["CodeBlockStart"] = "";
+["CodeBlockEnd"] = "end \n\n";
+
+["ReturnValueStart"] = "return ";
+["ReturnValueEnd"] = "\n";
+
+["InputStructName"] = nil --if nil it is not used if not nil it will make a struct for the inputs
+["InputStructTypeStart"] = "struct"
+["InputStructTypeEnd"] = ""
+["InputStructValueStart"] = "float "
+["InputStructValueEnd"] = " = 0; \n"
+
+}
