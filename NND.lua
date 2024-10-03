@@ -138,3 +138,29 @@ ReturnString = ReturnString..nnd["DisassemblyTable"]["CodeBlockEnd"] --FINISH
 return ReturnString
 end
 
+function nnd:TestFunction()
+
+nnd["ConnectionFunction"] = function( ... )
+		local InputValues = {...}
+		local InputAsString = ""
+		
+for z = 1 #InputValues do
+	InputAsString = InputAsString..InputValues[v]..", "
+end
+	
+print( "the inputs are: "..InputAsString )
+	
+io.write( "inset result" )
+	local UserInput = io.read()
+	UserInput = tonumber( UserInput ) or UserInput;
+	
+end
+
+io.write( "inset pramater length" )
+	local PamaLength = io.read()
+	
+for z = 1, tonumber( PamaLength ) or 2 do
+	
+end
+
+end
