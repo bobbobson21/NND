@@ -28,8 +28,32 @@ end
 end
 
 function nnd:EncodeDisassemblyResultTable( Inputs, Result )
-if ndd["DisassemblyResultTable"][Result] == nil then ndd["DisassemblyResultTable"][Result] = {} end
-	ndd["DisassemblyResultTable"][Result][#ndd["DisassemblyResultTable"][Result] +1] = Inputs;
+if nnd["DisassemblyResultTable"][Result] == nil then nnd["DisassemblyResultTable"][Result] = {} end
+	nnd["DisassemblyResultTable"][Result][#nnd["DisassemblyResultTable"][Result] +1] = Inputs;
+end
+
+function nnd:ParseThougthInputMap( ... )
+	local InputValues = {...}
+	
+for z = 1, #InputValues do
+if nnd["InputMap"][InputValues[z]] ~= nil then
+	InputValues[z] = nnd["InputMap"][InputValues[z]]
+   end
+end
+
+return table.unpack( InputValues )
+end
+
+function nnd:ParseThougthOutputMap( ... )
+	local InputValues = {...}
+	
+for z = 1, #InputValues do
+if nnd["OutputMap"][InputValues[z]] ~= nil then
+	InputValues[z] = nnd["OutputMap"][InputValues[z]]
+   end
+end
+
+return table.unpack( InputValues )
 end
 
 function nnd:RunDisassemblyCollectData() --collects the data from the nural network that can then be disassembled
@@ -37,9 +61,6 @@ function nnd:RunDisassemblyCollectData() --collects the data from the nural netw
 	local Detail = 1 -nnd["DisassemblyDetail"]
 	local StartPoint = nnd["DisassemblyMinRange"]
 	local EndPoint = nnd["DisassemblyMaxRange"] *( 1 /Detail )
-	
-	local InputMap = nnd["InputMap"]
-	local OutputMap = ndd["OutputMap"]
 
 	local DisassemblyCodeStart = ""
 	local DisassemblyCodeEnd = ""
@@ -47,16 +68,16 @@ function nnd:RunDisassemblyCollectData() --collects the data from the nural netw
 
 for K, V in ipairs( nnd["Inputs"] ) do
 if DisassemblyCodeInputValues ~= "" then
-	DisassemblyCodeInputValues = DisassemblyCodeInputValues..", "..tostring( V ).." * Detail"
+	DisassemblyCodeInputValues = DisassemblyCodeInputValues..", "..tostring( V ).." *"..tostring( Detail )
 else
-	DisassemblyCodeInputValues = tostring( V ).." * Detail"
+	DisassemblyCodeInputValues = tostring( V ).." *"..tostring( Detail )
 end
  
-	DisassemblyCodeStart = DisassemblyCodeStart.." for "..V.." = "..StartPoint..", "..EndPoint.."do"
+	DisassemblyCodeStart = DisassemblyCodeStart.." for "..V.." = "..StartPoint..", "..EndPoint.." do; "
 	DisassemblyCodeEnd = DisassemblyCodeEnd.." end"
 end
 
-	local DisassemblyCodeExacute = "nnd:EncodeDisassemblyResultTable( {"..DisassemblyCodeInputValues.."}, nnd.ConnectionFunction( "..DisassemblyCodeInputValues.." ) )"
+	local DisassemblyCodeExacute = "nnd:EncodeDisassemblyResultTable( {"..DisassemblyCodeInputValues.."}, nnd:ParseThougthOutputMap( nnd.ConnectionFunction( nnd:ParseThougthInputMap("..DisassemblyCodeInputValues..") ) ) )"
 
 	local Exe, Null = load( DisassemblyCodeStart..DisassemblyCodeExacute..DisassemblyCodeEnd )
 	local Results = Exe()  
@@ -138,29 +159,47 @@ ReturnString = ReturnString..nnd["DisassemblyTable"]["CodeBlockEnd"] --FINISH
 return ReturnString
 end
 
+function nnd:DisassemblyDataToDisassemblyOutToFile( File )
+
+io.output( File )
+io.write( nnd:DisassemblyDataToDisassembly() )
+io.close()
+
+io.output( io.stdout )
+
+end
+
 function nnd:TestFunction()
+
+nnd:LoadDisassemblyTableFromExternalFile( "nndLuaDisassemblyBasic.txt" )
 
 nnd["ConnectionFunction"] = function( ... )
 		local InputValues = {...}
 		local InputAsString = ""
 		
-for z = 1 #InputValues do
-	InputAsString = InputAsString..InputValues[v]..", "
+for z = 1, #InputValues do
+	InputAsString = InputAsString..tostring( InputValues[z] )..", "
 end
 	
 print( "the inputs are: "..InputAsString )
 	
-io.write( "inset result" )
+io.write( "inset result: " )
 	local UserInput = io.read()
 	UserInput = tonumber( UserInput ) or UserInput;
 	
+return UserInput
 end
 
-io.write( "inset pramater length" )
+io.write( "inset pramater length: " )
 	local PamaLength = io.read()
 	
 for z = 1, tonumber( PamaLength ) or 2 do
-	
+	nnd["Inputs"][#nnd["Inputs"] +1] = "Input"..tostring( z )
 end
 
+nnd:RunDisassemblyCollectData()
+nnd:DisassemblyDataToDisassemblyOutToFile( "nndtest.lua" )
+
 end
+
+nnd:TestFunction()
