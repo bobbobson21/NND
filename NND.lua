@@ -2,12 +2,12 @@
 	nnd = {}
 	nnd["Inputs"] = {} --the names of the inputs
 	nnd["InputMap"] = {} --maps the base nurmerical inputs to anything else like other numbers or text or anything really
-	nnd["OutputMap"] = {}
+	nnd["OutputMap"] = {} --maps the output to someting else
 	
 	nnd["ConnectionFunction"] = function( ... ) end --this function is ressponceible for sending the inputs to the nural network and then returning the output from it --i recommend you output the data in the nural network program to a file it can read from then use call in os.execute
 	
 	nnd["DisassemblyTable"] = {} --the how to perform Disassembly table
-	nnd["DisassemblyDetail"] = 0 --how close is it to the nural network in terms of detail use 0 if working with ints or input maps
+	nnd["DisassemblyDetail"] = 0 --how close is it to the neural network in terms of detail use 0 if working with ints or input maps
 	nnd["DisassemblyMinRange"] = 0
 	nnd["DisassemblyMaxRange"] = 1
 	nnd["DisassemblyResultTable"] = {} --temporary storage for the results
