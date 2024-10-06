@@ -112,7 +112,7 @@ end
 	ReturnString = ReturnString..nnd["DisassemblyTable"]["CodeBlockStart"] --CREATES CODE BLOCK FOR FUNC
 
 
-	local CompactData = (nnd["DisassemblyTable"]["ConditionOr"] == nil)
+	local CompactData = (nnd["DisassemblyTable"]["ConditionOr"] ~= nil)
 	local CompactOutput = {}
 
 for K, V in pairs( nnd["DisassemblyResultTable"] ) do --WRITES THE MAIN BODY OF CODE
@@ -122,7 +122,8 @@ for K, V in pairs( nnd["DisassemblyResultTable"] ) do --WRITES THE MAIN BODY OF 
 	local ReturnData = K
 	
 for L, W in pairs( V ) do
-for M, X in pairs( W ) do ---the 
+	Output = ""
+for M, X in pairs( W ) do
 	Output = Output..nnd["DisassemblyTable"]["ConditionStart"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionMore"]..tostring( X )..nnd["DisassemblyTable"]["ConditionAnd"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionLess"]..tostring(X +(1 -nnd["DisassemblyDetail"]))..nnd["DisassemblyTable"]["ConditionEnd"]
 if M < #W then Output = Output..nnd["DisassemblyTable"]["ConditionAnd"] end
 end
@@ -138,20 +139,18 @@ if CompactOutput[ReturnData] == nil then CompactOutput[ReturnData] = {} end
    end
 end
 
-for K, V in ipairs( CompactOutput ) do 
+for K, V in pairs( CompactOutput ) do 
 
 	local Output = ""
+	local ReturnData = K
+	
 for L, W in pairs( V ) do
-if Output ~= "" then
-	Prefix = nnd["DisassemblyTable"]["ConditionEnd"].." "
-if L < #V then Prefix = Prefix..nnd["DisassemblyTable"]["ConditionOr"] end
+	local PostFix = ""
+if L < #V then PostFix = nnd["DisassemblyTable"]["ConditionOr"] end
+	Output = Output..nnd["DisassemblyTable"]["ConditionStart"]..W..nnd["DisassemblyTable"]["ConditionEnd"]..PostFix
 end
 
-	Output = Output..Prefix..nnd["DisassemblyTable"]["ConditionStart"]
-end
-
-
-	ReturnString = ReturnString..nnd["DisassemblyTable"]["IfStart"]..Output..nnd["DisassemblyTable"]["IfEnd"]..nnd["DisassemblyTable"]["CodeBlockStart"]..nnd["DisassemblyTable"]["ReturnValueStart"]..tostring(K)..nnd["DisassemblyTable"]["ReturnValueEnd"]..nnd["DisassemblyTable"]["CodeBlockEnd"]
+	ReturnString = ReturnString..nnd["DisassemblyTable"]["IfStart"]..Output..nnd["DisassemblyTable"]["IfEnd"]..nnd["DisassemblyTable"]["CodeBlockStart"]..nnd["DisassemblyTable"]["ReturnValueStart"]..tostring(ReturnData)..nnd["DisassemblyTable"]["ReturnValueEnd"]..nnd["DisassemblyTable"]["CodeBlockEnd"]
 end
 
 ReturnString = ReturnString..nnd["DisassemblyTable"]["CodeBlockEnd"] --FINISH
@@ -201,5 +200,3 @@ nnd:RunDisassemblyCollectData()
 nnd:DisassemblyDataToDisassemblyOutToFile( "nndtest.lua" )
 
 end
-
-nnd:TestFunction()
