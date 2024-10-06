@@ -11,7 +11,6 @@ The disassembly detail on the other hand is used to determine how much float det
 The connection function is one of the most important parts of this system as it is how you connect NND to a neural network. how it works is simple the function will receive the inputs, passed though the map, NND wants to test your code (which you have to write in this function) will then communicate that data to the network and then a response will be returned in the function that will go though the output map.
 
 #how to run
-
 To run the system on a network you need to run nnd:RunDisassemblyCollectData() and after this you will have to wait for it to finish which will take a long time as it has a big O of O((MaxRange-MinRange)^ NumOfInputs) so do double check the connection function works before this.
 
 #how to get back a result

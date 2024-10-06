@@ -85,7 +85,9 @@ end
 end
 
 function nnd:DisassemblyDataToDisassembly()
+	
 	local ReturnString = ""
+	local Detail = 1 -nnd["DisassemblyDetail"]
 
 if nnd["DisassemblyTable"]["InputStructName"] ~= nil then --MAKES STRUCT
 	ReturnString = ReturnString..nnd["DisassemblyTable"]["InputStructTypeStart"]..nnd["DisassemblyTable"]["InputStructName"]..nnd["DisassemblyTable"]["InputStructTypeEnd"] --START
@@ -124,7 +126,13 @@ for K, V in pairs( nnd["DisassemblyResultTable"] ) do --WRITES THE MAIN BODY OF 
 for L, W in pairs( V ) do
 	Output = ""
 for M, X in pairs( W ) do
-	Output = Output..nnd["DisassemblyTable"]["ConditionStart"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionMore"]..tostring( X )..nnd["DisassemblyTable"]["ConditionAnd"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionLess"]..tostring(X +(1 -nnd["DisassemblyDetail"]))..nnd["DisassemblyTable"]["ConditionEnd"]
+	
+if Detail ~= 1 then
+	Output = Output..nnd["DisassemblyTable"]["ConditionStart"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionMore"]..tostring( X )..nnd["DisassemblyTable"]["ConditionAnd"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionLess"]..tostring(X +Detail)..nnd["DisassemblyTable"]["ConditionEnd"]
+else
+	Output = Output..nnd["DisassemblyTable"]["ConditionStart"]..nnd["Inputs"][M]..nnd["DisassemblyTable"]["ConditionEquals"]..tostring( X )..nnd["DisassemblyTable"]["ConditionEnd"]
+end
+
 if M < #W then Output = Output..nnd["DisassemblyTable"]["ConditionAnd"] end
 end
 
@@ -200,3 +208,5 @@ nnd:RunDisassemblyCollectData()
 nnd:DisassemblyDataToDisassemblyOutToFile( "nndtest.lua" )
 
 end
+
+nnd:TestFunction()
